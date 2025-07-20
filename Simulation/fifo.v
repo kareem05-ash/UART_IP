@@ -26,8 +26,8 @@ module fifo#
         begin
             if(rst)
                 begin
-                    head <= 0;                  
-                    tail <= 0;
+                    head <= '0;                  
+                    tail <= '0;
                     rd_data <= '0;
                     fifo_count <= '0;
                 end
