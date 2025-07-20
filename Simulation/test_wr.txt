@@ -1,0 +1,19 @@
+// memory data file (do not edit the following line - required for mem load use)
+// instance=/tb_fifo/dut_fifo/fifo
+// format=hex addressradix=h dataradix=h version=1.0 wordsperline=1 noaddress
+af
+05
+f0
+ff
+aa
+b1
+bb
+bf
+bb
+cb
+1c
+5b
+c5
+ba
+12
+85
