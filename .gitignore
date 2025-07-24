@@ -28,6 +28,7 @@ vsim.dbug
 *.ini
 *.db
 *.sdf
+wlf*
 
 # ========== Vivado-specific
 *.str
