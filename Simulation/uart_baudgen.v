@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module uart_baudgen#
 (
     parameter BAUD = 9600, 
@@ -18,7 +19,6 @@ module uart_baudgen#
             if(rst)
                 begin
                     tick <= 0;
-
                     count <= 0;
                 end
             else if(count == clk_cycles-1)
