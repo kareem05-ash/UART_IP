@@ -83,7 +83,7 @@ module uart_top#
         .tx_busy(tx_busy)
     );
 
-    //FIFO_TX.
+    //FIFO_TX Instantiation
     fifo#(
         .data_wd(data_wd), 
         .depth(fifo_depth), 
@@ -125,7 +125,7 @@ module uart_top#
         .dout(dout_rx)
     );
 
-    //FIFO_RX
+    //FIFO_RX Instantiation
     fifo#(
         .data_wd(data_wd), 
         .depth(fifo_depth), 
