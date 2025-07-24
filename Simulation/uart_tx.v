@@ -1,31 +1,33 @@
 module uart_tx#
 (
-    parameter BAUD = 9600,              //baud rate per second
-    parameter clk_freq = 50_000_000,    //system clk frequency
-    parameter oversampling_rate = 16,   //to maintain valid data (avoiding noise)
-    parameter data_wd = 8,              //data width
-    parameter [1:0] parity = 0          //1:odd-parity, 2:even-parity, default:no-parity
+    parameter BAUD = 9600,                          //baud rate per second
+    parameter clk_freq = 50_000_000,                //system clk frequency in 'HZ'
+    parameter clk_period = 1_000_000_000/clk_freq,  //system clk period in 'ns'
+    parameter oversampling_rate = 16,               //to maintain valid data (avoiding noise)
+    parameter data_wd = 8,                          //data width 
+    parameter parity = 0                            //1:odd, 2:even, default:no-parity
 )
 (
-    input clk,                          //system clk
-    input rst,                          //system async. active-high reset
-    input tx_start,                     //signal to initiate data (allow the transimition operation)
-    input tick,                         //pulse to transimit one bit (from baud generator)
-    input [data_wd-1 : 0] din,          //parallel input data to be tarnsimitted
-    output reg tx,                      //serial parallel output line
-    output reg tx_done,                 //flag indicates that the trans. operation's done
-    output reg tx_busy                  //flag indicates that the trans. operation is being excuted
+    input clk,                                      //system clk
+    input rst,                                      //system async. active-high reset
+    input tx_start,                                 //signal to initiate data (allow the transimition operation)
+    input tick,                                     //pulse to transimit one bit (from baud generator)
+    input [data_wd-1 : 0] din,                      //parallel input data to be tarnsimitted
+    output reg tx,                                  //serial parallel output line
+    output reg tx_done,                             //flag indicates that the trans. operation's done
+    output reg tx_busy                              //flag indicates that the trans. operation is being excuted
 );
-    localparam IDLE   = 3'b000,         //waits for tx_start = 1
-               START  = 3'b001,         //start-bit = 0
-               DATA   = 3'b011,         //transmit 8-bit data (LSB -> MSB)
-               PARITY = 3'b010,         //sending parity bit if enabled
-               STOP   = 3'b110,         //stop-bit = 1
-               DONE   = 3'b111;         //raise tx_done. go back to IDLE
+    //states encoding (One-Hot) to minimize glitches
+    localparam IDLE   = 6'b000001,                  //waits for tx_start = 1
+               START  = 6'b000010,                  //start-bit = 0
+               DATA   = 6'b000100,                  //transmit 8-bit data (LSB -> MSB)
+               PARITY = 6'b001000,                  //sending parity bit if enabled
+               STOP   = 6'b010000,                  //stop-bit = 1
+               DONE   = 6'b100000;                  //raise tx_done. go back to IDLE
 
     wire parity_en = (parity == 1 || parity == 2)? 1 : 0;
     wire parity_res = (parity == 1)? ^din : ((parity == 2)? ~^din : 0);
-    reg[2:0] c_state, n_state;
+    reg[5:0] c_state, n_state;
     reg[$clog2(oversampling_rate)-1 : 0] tick_count;
     reg[$clog2(data_wd)-1 : 0] bit_index;
 
