@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////
+// Kareem Ashraf Mostafa
+// kareem.ash05@gmail.com
+// 01002321067
+// github.com/kareem05-ash
+////////////////////////////////////////////////////
 `timescale 1ns/1ps
 module tb_tx();
     parameter BAUD = 9600;              //baud rate per second

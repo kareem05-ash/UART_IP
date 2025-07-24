@@ -1,5 +1,11 @@
+////////////////////////////////////////////////////
+// Kareem Ashraf Mostafa
+// kareem.ash05@gmail.com
+// 01002321067
+// github.com/kareem05-ash
+////////////////////////////////////////////////////
 `timescale 1ns/1ps
-module tb_baudgen();
+module tb_baudgen(); 
     parameter BAUD = 9600;
     parameter clk_freq = 50_000_000;
     parameter oversampling_rate = 16;

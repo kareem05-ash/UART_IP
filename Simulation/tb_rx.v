@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////
+// Kareem Ashraf Mostafa
+// kareem.ash05@gmail.com
+// 01002321067
+// github.com/kareem05-ash
+////////////////////////////////////////////////////
 `timescale 1ns/1ps
 module tb_rx();
 
@@ -209,7 +215,7 @@ module tb_rx();
         end
     initial
         $monitor("framing error = %d, parity_error_flag = %d", framing_error_flag, parity_error_flag);
-    monitor
+    // monitor
     initial
         $monitor("framing_error_flag = %d, parity_error_flag = %d, rx_done = %d, dout = 0x%h, c_state = %b", 
                 framing_error_flag, parity_error_flag, rx_done, dout, dut_rx.c_state);
