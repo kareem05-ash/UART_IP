@@ -21,7 +21,7 @@
 *.tcl
 
 # ========== QuestaSim Work Directory
-work#
+work/
 vsim.wlf
 transcript
 vsim.dbug
@@ -29,6 +29,8 @@ vsim.dbug
 *.db
 *.sdf
 wlf*
+*.mpf
+*.mti
 
 # ========== Vivado-specific
 *.str
