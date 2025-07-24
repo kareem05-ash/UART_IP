@@ -1,0 +1,59 @@
+####################################################
+# Kareem Ashraf Mostafa
+# kareem.ash05@gmail.com
+# 01002321067
+# github.com/kareem05-ash
+####################################################
+# ========== Simulation Artifacts ==========
+*.vcd
+*.wlf
+*.vdb
+*.log
+*.jou
+*.pb
+*.svf
+*.ucdb
+*.do~
+*.bak
+*.asdb
+*.vstf
+*.err
+*.tcl
+
+# ========== QuestaSim Work Directory
+work#
+vsim.wlf
+transcript
+vsim.dbug
+*.ini
+*.db
+*.sdf
+
+# ========== Vivado-specific
+*.str
+*.cache/
+*.webtalk/
+*.hw/
+*.runs/
+*.ip_user_files/
+*.Xil/
+*.xpr.user
+*.xsim/
+*.sim/
+*.srcs/
+*.vivado.jou
+*.vivado.log
+
+# ========== General temp & OS Files ==========
+*.tmp
+*.swp
+*.swo
+*.bak
+*.old
+*.DS_Store
+Thumbs.do
+
+# ========== Misc Output ==========
+*.bin
+# *.hex
+# *.txt
