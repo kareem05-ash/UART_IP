@@ -2,7 +2,7 @@
 module tb_tx();
     parameter BAUD = 9600;              //baud rate per second
     parameter clk_freq = 50_000_000;    //system clk frequency
-    parameter oversampling_rate = 16;   //to maintain valid data (avoiding noise) : transimits data @ tick-7 pulse
+    parameter oversampling_rate = 16;   //to maintain valid data (avoiding noise)
     parameter data_wd = 8;              //data width
     parameter [1:0] parity = 0;         //1:odd-parity, 2:even-parity, default:no-parity
 
