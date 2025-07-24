@@ -20,7 +20,7 @@
 *.err
 *.tcl
 
-# ========== QuestaSim Work Directory
+# ========== QuestaSim Work Directory ==========
 work/
 vsim.wlf
 transcript
@@ -32,7 +32,7 @@ wlf*
 *.mpf
 *.mti
 
-# ========== Vivado-specific
+# ========== Vivado-specific ==========
 *.str
 *.cache/
 *.webtalk/
