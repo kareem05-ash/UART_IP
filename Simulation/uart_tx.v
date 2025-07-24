@@ -2,7 +2,7 @@ module uart_tx#
 (
     parameter BAUD = 9600,              //baud rate per second
     parameter clk_freq = 50_000_000,    //system clk frequency
-    parameter oversampling_rate = 16,   //to maintain valid data (avoiding noise) : transimits data @ tick-7 pulse
+    parameter oversampling_rate = 16,   //to maintain valid data (avoiding noise)
     parameter data_wd = 8,              //data width
     parameter [1:0] parity = 0          //1:odd-parity, 2:even-parity, default:no-parity
 )
@@ -40,17 +40,15 @@ module uart_tx#
 
     //n_state handling (combinational)
     always@(*)
-        begin
-            case(c_state)
-                IDLE    : n_state = tx_start? START : IDLE;
-                START   : n_state = (tick_count == (oversampling_rate-1))? DATA : START;
-                DATA    : n_state = ((tick_count == (oversampling_rate-1)) && (bit_index == (data_wd-1)))? (parity_en? PARITY : STOP) : DATA;
-                PARITY  : n_state = (tick_count == (oversampling_rate-1))? STOP : PARITY;
-                STOP    : n_state = (tick_count == (oversampling_rate-1))? DONE : STOP;
-                DONE    : n_state = tx_done? IDLE : DONE;   //tx_done is raised means that the frame's transmitted successfully.
-                default : n_state = IDLE;
-            endcase      
-        end
+        case(c_state)
+            IDLE    : n_state = tx_start? START : IDLE;
+            START   : n_state = (tick_count == (oversampling_rate-1))? DATA : START;
+            DATA    : n_state = ((tick_count == (oversampling_rate-1)) && (bit_index == (data_wd-1)))? (parity_en? PARITY : STOP) : DATA;
+            PARITY  : n_state = (tick_count == (oversampling_rate-1))? STOP : PARITY;
+            STOP    : n_state = (tick_count == (oversampling_rate-1))? DONE : STOP;
+            DONE    : n_state = tx_done? IDLE : DONE;   //tx_done is raised means that the frame's transmitted successfully.
+            default : n_state = IDLE;
+        endcase  
 
     //output assinging & counters logic (sequential)
     always@(posedge clk or posedge rst)
