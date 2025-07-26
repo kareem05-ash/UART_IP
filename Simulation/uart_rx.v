@@ -12,7 +12,7 @@ module uart_rx#
     parameter clk_period = 1_000_000_000/clk_freq,  //system clk period in 'ns'
     parameter oversampling_rate = 16,               //to maintain valid data (avoiding noise)
     parameter data_wd = 8,                          //data width 
-    parameter parity = 0                            //1:odd, 2:even, default:no-parity
+    parameter parity = 1                            //1:odd, 2:even, default:no-parity
 )
 (
     input wire clk,                                 //system clk
