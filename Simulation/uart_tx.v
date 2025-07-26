@@ -33,7 +33,7 @@ module uart_tx#
                DONE   = 6'b100000;                  //raise tx_done. go back to IDLE
 
     wire parity_en = (parity == 1 || parity == 2)? 1 : 0;
-    wire parity_res = parity_en? ((parity == 1)? ^din : ~^din) : 0;
+    wire parity_res = parity_en? ((parity == 2)? ^din : ~^din) : 0;
     reg[5:0] c_state, n_state;
     reg[$clog2(oversampling_rate)-1 : 0] tick_count;
     reg[$clog2(data_wd+1)-1 : 0] bit_index;
