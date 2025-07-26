@@ -41,7 +41,7 @@ module uart_rx#
     reg [$clog2(data_wd+1)-1 : 0] bit_index;        //counts data bits received
     reg [$clog2(oversampling_rate)-1 : 0] tick_count;   
     wire parity_en = (parity == 1 || parity == 2);   
-    wire parity_expected = (parity == 1)? ^received_data : ~^received_data;
+    wire parity_expected = (parity == 2)? ^received_data : ~^received_data;
 
     //state transition logic (sequential)
     always@(posedge clk or posedge rst)
