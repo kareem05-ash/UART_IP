@@ -47,19 +47,19 @@ module uart_top#
 );
     //internal signals
     wire tick;                                      //tick signal pulse from 'baudgen'
-    wire din_tx;                                    //fifo_tx read data output === TX parallel din
-    wire tx_rx;                                     //tx=>rx line .
-    wire dout_rx;                                   //fifo_rx write data input === RX parallel dout
+    wire tx_rx;                                     //tx=>rx line 
+    wire [data_wd-1 : 0] din_tx;                    //fifo_tx read data output === TX parallel din
+    wire [data_wd-1 : 0] dout_rx;                   //fifo_rx write data input === RX parallel dout
 
     //Baud Generator Instantiation
-    baudgen#(
-        .BAUD(BAUD), 
-        .clk_freq(clk_freq), 
+    uart_baudgen#(
+        .BAUD(BAUD),
+        .clk_freq(clk_freq),
         .oversampling_rate(oversampling_rate)
     )
-    baudge(
-        .clk(clk), 
-        .rst(rst), 
+    baudgen(
+        .clk(clk),
+        .rst(rst),
         .tick(tick)
     );
 
@@ -95,12 +95,12 @@ module uart_top#
         .rst(rst), 
         .wr_en(tx_wr_en), 
         .rd_en(tx_rd_en), 
-        .wr_data(din), 
+        .wr_data(din),      //system parallel input data
         .full(tx_full), 
         .empty(tx_empty), 
         .almost_full(tx_almost_full), 
         .almost_empty(tx_almost_empty), 
-        .rd_data(din_tx)    //system parallel input data
+        .rd_data(din_tx)    
     );
 
     //RX Instantiation
