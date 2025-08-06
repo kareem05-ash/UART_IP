@@ -27,7 +27,6 @@ module tb_tx();
 // Neede internal signals
     reg [data_wd-1 : 0] data = 0;                   // stores data to assert correctness
     integer i;
-    integer num_char;                               // stores the number of characters in a string (msg)
 // states encoding (One-Hot) to minimize glitches
     localparam IDLE   = 6'b000001,                  //waits for tx_start = 1
                START  = 6'b000010,                  //start-bit = 0
