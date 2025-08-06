@@ -34,18 +34,20 @@ module tb_baudgen();
     
     initial         //stimulus
         begin
-            rst = 1; @(negedge clk);   //activate rst
-            rst = 0;                   //release rst
-            repeat(clk_cycles) @(negedge clk);        //waits for the needed clk cycles to get tick pusle
-            if(tick)
-                $display("Pass : tick = %d after %d cycles , count = %d", tick, clk_cycles, dut_baudgen.count);
-            else
-                $display("Error : tick = %d after %d cycles , count = %d", tick, clk_cycles, dut_baudgen.count);
-            @(negedge clk);                          //waits for one more clk cycle to track tick if not low
-            if(!tick)
-                $display("Pass : tick = %d after one more cycle , count = %d", tick, dut_baudgen.count);
-            else
-                $display("Error : tick = %d after one more cycle , count = %d", tick, dut_baudgen.count);
+            repeat(10) begin
+                rst = 1; @(negedge clk);   //activate rst
+                rst = 0;                   //release rst
+                repeat(clk_cycles) @(negedge clk);        //waits for the needed clk cycles to get tick pusle
+                if(tick)
+                    $display("Pass : tick = %d after %d cycles , count = %d", tick, clk_cycles, dut_baudgen.count);
+                else
+                    $display("Error : tick = %d after %d cycles , count = %d", tick, clk_cycles, dut_baudgen.count);
+                @(negedge clk);                          //waits for one more clk cycle to track tick if not low
+                if(!tick)
+                    $display("Pass : tick = %d after one more cycle , count = %d", tick, dut_baudgen.count);
+                else
+                    $display("Error : tick = %d after one more cycle , count = %d", tick, dut_baudgen.count);
+            end
             #100; $stop;                             //stop simulation
         end
 endmodule
