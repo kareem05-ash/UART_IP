@@ -4,7 +4,6 @@
 // 01002321067
 // github.com/kareem05-ash
 ////////////////////////////////////////////////////
-`timescale 1ns/1ps
 module fifo#
 (
     parameter data_wd = 8,                      //data width
