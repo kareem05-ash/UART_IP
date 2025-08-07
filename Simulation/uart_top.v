@@ -6,49 +6,49 @@
 ////////////////////////////////////////////////////
 module uart_top#
 (   //parameters
-        parameter BAUD = 9600,                          //baud rate per second
-        parameter clk_freq = 50_000_000,                //system clk frequency in 'HZ'
-        parameter clk_period = 1_000_000_000/clk_freq,  //system clk period in 'ns'
-        parameter oversampling_rate = 16,               //to maintain valid data (avoiding noise)
-        parameter data_wd = 8,                          //data width 
-        parameter parity = 1,  //odd-parity             //1:odd, 2:even, default:no-parity
-        parameter fifo_depth = 256,                     //fifo entries
-        parameter almost_full_thr = 240,                //threshold point which the almost_full flag arise at
-        parameter almost_empty_thr = 16                 //threshold point which the almost_empty flag arise at
+        parameter BAUD = 9600,                          // baud rate per second
+        parameter clk_freq = 50_000_000,                // system clk frequency in 'HZ'
+        parameter clk_period = 1_000_000_000/clk_freq,  // system clk period in 'ns'
+        parameter oversampling_rate = 16,               // to maintain valid data (avoiding noise)
+        parameter data_wd = 8,                          // data width 
+        parameter parity = 1,  //odd-parity             // 1:odd, 2:even, default:no-parity
+        parameter fifo_depth = 256,                     // fifo entries
+        parameter almost_full_thr = 240,                // threshold point which the almost_full flag arise at
+        parameter almost_empty_thr = 16                 // threshold point which the almost_empty flag arise at
 )
 (   //system ports
     //inputs 
-        input wire clk,                                 //system clk signal
-        input wire rst,                                 //system async. active-high reset
-        input wire tx_wr_en,                            //fifo_tx write enable
-        input wire tx_rd_en,                            //fifo_tx read enable
-        input wire rx_wr_en,                            //fifo_rx write enable
-        input wire rx_rd_en,                            //fifo_rx read enable
-        input wire tx_start,                            //start transmitting operation signal
-        input wire rx_start,                            //start reciption operation signal
-        input wire [data_wd-1 : 0] din,                 //system parallel input data
+        input wire clk,                                 // system active-high clk signal
+        input wire rst,                                 // system async. active-high reset signal
+        input wire tx_wr_en,                            // fifo_tx write enable
+        input wire tx_rd_en,                            // fifo_tx read enable
+        input wire rx_wr_en,                            // fifo_rx write enable
+        input wire rx_rd_en,                            // fifo_rx read enable
+        input wire tx_start,                            // enables transmittion operation
+        input wire rx_start,                            // enables reception operation
+        input wire [data_wd-1 : 0] din,                 // system parallel input data
     //outputs
-        output wire tx_full,                            //tx_fifo full flag
-        output wire tx_empty,                           //tx_fifo empty flag
-        output wire tx_almost_full,                     //tx_fifo almost_full flag
-        output wire tx_almost_empty,                    //tx_fifo almost_empty flag
-        output wire rx_full,                            //rx_fifo full flag
-        output wire rx_empty,                           //rx_fifo empty flag
-        output wire rx_almost_full,                     //rx_fifo almost_full flag
-        output wire rx_almost_empty,                    //rx_fifo almost_empty flag
-        output wire tx_done,                            //indicates a valid frame's been transmitted 
-        output wire tx_busy,                            //inidcates that a frame is being transmitted
-        output wire rx_done,                            //indicates a valid frame's been received
-        output wire rx_busy,                            //indicates that a frame is being received
-        output wire framing_error_flag,                 //indicates invalid start-bit, or stop-bit or noise on start-bit, stop-bit, even or data bits
-        output wire parity_error_flag,                  //indicates invalid parity-bit's been received
-        output wire [data_wd-1 : 0] dout                //system parallel output data                
+        output wire tx_full,                            // tx_fifo full flag
+        output wire tx_empty,                           // tx_fifo empty flag
+        output wire tx_almost_full,                     // tx_fifo almost_full flag
+        output wire tx_almost_empty,                    // tx_fifo almost_empty flag
+        output wire rx_full,                            // rx_fifo full flag
+        output wire rx_empty,                           // rx_fifo empty flag
+        output wire rx_almost_full,                     // rx_fifo almost_full flag
+        output wire rx_almost_empty,                    // rx_fifo almost_empty flag
+        output wire tx_done,                            // indicates a valid frame's been transmitted 
+        output wire tx_busy,                            // inidcates that a frame is being transmitted
+        output wire rx_done,                            // indicates a valid frame's been received
+        output wire rx_busy,                            // indicates that a frame is being received
+        output wire framing_error_flag,                 // indicates invalid start-bit, or stop-bit or noise on start-bit, stop-bit, even or data bits
+        output wire parity_error_flag,                  // indicates invalid parity-bit's been received
+        output wire [data_wd-1 : 0] dout                // system parallel output data                
 );
     //internal signals
-        wire tick;                                      //tick signal pulse from 'baudgen'
-        wire tx_rx;                                     //tx=>rx line 
-        wire [data_wd-1 : 0] din_tx;                    //fifo_tx read data output === TX parallel din
-        wire [data_wd-1 : 0] dout_rx;                   //fifo_rx write data input === RX parallel dout
+        wire tick;                                      // tick signal pulse from 'uart_baudgen'
+        wire tx_rx;                                     // tx => rx line 
+        wire [data_wd-1 : 0] din_tx;                    // fifo_tx read data output === TX parallel din
+        wire [data_wd-1 : 0] dout_rx;                   // fifo_rx write data input === RX parallel dout
 
     //Baud Generator Instantiation
         uart_baudgen#(
