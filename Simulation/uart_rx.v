@@ -167,11 +167,15 @@ module uart_rx#
                     tick_count <= 0;                //reset the counter
                 else        
                     tick_count <= tick_count + 1;   //increment the counter if not full
+            if(c_state != n_state) begin
+                tick_count <= 0;                    // reset the counter before going into new state
+            end
             // framing, parity errors handling
             if(framing_error_flag || parity_error_flag)
                 begin
                     n_state <= IDLE;
                     dout <= 0;
                 end
+            
         end 
 endmodule
