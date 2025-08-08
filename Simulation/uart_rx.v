@@ -74,6 +74,7 @@ module uart_rx#
                     test_bit <= 0;
                     rx_done <= 0;
                     rx_busy <= 0;
+                    dout <= 0;
                 end
             else
                 begin
@@ -144,8 +145,10 @@ module uart_rx#
                                 end
                         DONE    : 
                                 begin
-                                    dout <= received_data;  //assigning the received data to the output data port
-                                    rx_done <= 1;           //indicates valid reciption process
+                                    if(tick) begin
+                                        dout <= received_data;  //assigning the received data to the output data port
+                                        rx_done <= 1;           //indicates valid reciption process
+                                    end
                                 end
                         default :
                                 begin       //reset operation
