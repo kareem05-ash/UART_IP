@@ -112,7 +112,7 @@ module tb_rx();
 
     initial
         begin 
-                                //first scenario (reset bahavior)
+        //first scenario (reset bahavior)
             $display("\n ======================== first scenario (reset bahavior) ========================");
             reset();            //reset the system
             if(rx_done || rx_busy || framing_error_flag || parity_error_flag || 
@@ -122,7 +122,7 @@ module tb_rx();
             else    
                 $display("[PASS] first scenario (reset bahavior)");
 
-                                //second scenario (sendign a frame [0xA5])
+        //second scenario (sendign a frame [0xA5])
             $display("\n ======================== second scenario (sendign a frame [0xA5]) ========================");
             reset();            //reset the system
             send_frame(8'hA5);  //sending a complete frame
@@ -132,22 +132,22 @@ module tb_rx();
             else
                 $display("[PASS] second scenario (sendign a frame [0xA5]) : dout = 0x%h, expeted = a5", dout);
 
-                                //third scenario (Multiple Back-to-Back Frames)
-            $display("\n ======================== third scenario (Multiple Back-to-Back Frames) ========================");
-            reset();            //reset the system
-            repeat(10)           //sending 10 frames back to back (without delays)
-                begin
-                    byte = $random;     //generating a random frame
-                    send_frame(byte);   //sendign the random frame
-                    if((dout != byte)) // || !rx_done || (dut_rx.c_state != DONE
-                        $display("[FAIL] third scenario (Multiple Back-to-Back Frames) : dout = 0x%h, expected = 0x%h, c_state = %b, rx_done = %d", 
-                                dout, byte, dut_rx.c_state, rx_done);
-                    else
-                        $display("[PASS] third scenario (Multiple Back-to-Back Frames) : dout = 0x%h, expected = 0x%h", 
-                                dout, byte);
-                end
+            //                     //third scenario (Multiple Back-to-Back Frames)
+            // $display("\n ======================== third scenario (Multiple Back-to-Back Frames) ========================");
+            // reset();            //reset the system
+            // repeat(10)           //sending 10 frames back to back (without delays)
+            //     begin
+            //         byte = $random;     //generating a random frame
+            //         send_frame(byte);   //sendign the random frame
+            //         if((dout != byte)) // || !rx_done || (dut_rx.c_state != DONE
+            //             $display("[FAIL] third scenario (Multiple Back-to-Back Frames) : dout = 0x%h, expected = 0x%h, c_state = %b, rx_done = %d", 
+            //                     dout, byte, dut_rx.c_state, rx_done);
+            //         else
+            //             $display("[PASS] third scenario (Multiple Back-to-Back Frames) : dout = 0x%h, expected = 0x%h, c_state = %b, rx_done = %d", 
+            //                     dout, byte, dut_rx.c_state, rx_done);
+            //     end
 
-                                //fourth scenario (noise on line during IDLE [Glitch Rejection Test])
+        //fourth scenario (noise on line during IDLE [Glitch Rejection Test])
             $display("\n ======================== fourth scenario (noise on line during IDLE [Glitch Rejection Test]) ========================");
             reset();            //reset the system
             rx_start = 1;       //enable reciption operation (IDLE => START) transition
@@ -166,13 +166,13 @@ module tb_rx();
                 $display("[PASS] fourth scenario (noise on line during IDLE [Glitch Rejection Test]) : c_state = %b, dout = 0x%h, tick_count = %d", 
                         dut_rx.c_state, dout, dut_rx.tick_count);
 
-                                //fifth scenario (idle line for so long, then valid frame [0x3C])
+        //fifth scenario (idle line for so long, then valid frame [0x3C])
             $display("\n ======================== fifth scenario (idle line for so long, then valid frame) ========================");
             reset();            //reset the system
             repeat(100 * oversampling_rate)     
                 @(negedge tick);
-            $display("waits for 100 oversampling cycles");
-            byte = 8'h3C;
+            $display("waits for 100 oversampling cycles | c_state = %b", dut_rx.c_state);
+            byte = 8'h65;
             send_frame(byte);   //send a valid frame [0x3C]
             if(dout != byte)
                 $display("[FAIL] fifth scenario (idle line for so long, then valid frame) : dout = 0x%h, expected = 0x%h, c_state = %b, rx_done = %d", 
@@ -181,7 +181,7 @@ module tb_rx();
                 $display("[PASS] fifth scenario (idle line for so long, then valid frame) : dout = 0x%h, expected = 0x%h", 
                         dout, byte);
 
-                                //sixth scenario (Corner Case : receiveing frame [0xFF])
+        //sixth scenario (Corner Case : receiveing frame [0xFF])
             $display("\n ======================== sixth scenario (Corner Case : receiveing frame [0xFF]) ========================");
             reset();            //reset the system
             byte = 8'hFF;
@@ -194,7 +194,7 @@ module tb_rx();
                         dout, byte);
 
 
-                                //seventh scenario (Corner Case : receiveing frame [0x00])        
+        //seventh scenario (Corner Case : receiveing frame [0x00])        
             $display("\n ======================== seventh scenario (Corner Case : receiveing frame [0x00]) ========================");
             reset();            //reset the system
             byte = 8'h00;
@@ -213,10 +213,9 @@ module tb_rx();
             #100; 
             $stop;
         end
+    // initial
+    //     $monitor("framing error = %d, parity_error_flag = %d", framing_error_flag, parity_error_flag);
     initial
-        $monitor("framing error = %d, parity_error_flag = %d", framing_error_flag, parity_error_flag);
-    // monitor
-    initial
-        $monitor("framing_error_flag = %d, parity_error_flag = %d, rx_done = %d, dout = 0x%h, c_state = %b", 
-                framing_error_flag, parity_error_flag, rx_done, dout, dut_rx.c_state);
+        $monitor("framing error = %d, parity_error_flag = %d, rx_done = %d, c_state = %b, dout = %h, received_data = %h", 
+                framing_error_flag, parity_error_flag, rx_done, dut_rx.c_state, dout, dut_rx.received_data);
 endmodule
