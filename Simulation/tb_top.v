@@ -320,14 +320,14 @@ module tb_top();
                 $stop;
             end
     // monitor
-        initial begin 
-            $monitor("RX.c_state = %b, dout_rx = %h, tx_done = %d, rx_done = %d, framing_error_flag = %d, parity_error_flag = %d, tx_fifo_count = %d, rx_fifo_count = %d",
-                        DUT.RX.c_state, DUT.dout_rx, tx_done, rx_done, framing_error_flag, parity_error_flag, DUT.fifo_tx.fifo_count, DUT.fifo_rx.fifo_count);
-        end
-        initial begin
-            $monitor("fifo_tx[0] = %h, fifo_rx[0] = %h | fifo_tx[1] = %h, fifo_rx[1] = %h | fifo_tx[2] = %h, fifo_rx[2] = %h | fifo_tx[3] = %h, fifo_rx[3] = %h", 
-                        DUT.fifo_tx.fifo[0], DUT.fifo_rx.fifo[0], DUT.fifo_tx.fifo[1], DUT.fifo_rx.fifo[1], DUT.fifo_tx.fifo[2], DUT.fifo_rx.fifo[2], DUT.fifo_tx.fifo[3], DUT.fifo_rx.fifo[3]);
-        end
+        // initial begin 
+        //     $monitor("RX.c_state = %b, dout_rx = %h, tx_done = %d, rx_done = %d, framing_error_flag = %d, parity_error_flag = %d, tx_fifo_count = %d, rx_fifo_count = %d",
+        //                 DUT.RX.c_state, DUT.dout_rx, tx_done, rx_done, framing_error_flag, parity_error_flag, DUT.fifo_tx.fifo_count, DUT.fifo_rx.fifo_count);
+        // end
+        // initial begin
+        //     $monitor("fifo_tx[0] = %h, fifo_rx[0] = %h | fifo_tx[1] = %h, fifo_rx[1] = %h | fifo_tx[2] = %h, fifo_rx[2] = %h | fifo_tx[3] = %h, fifo_rx[3] = %h", 
+        //                 DUT.fifo_tx.fifo[0], DUT.fifo_rx.fifo[0], DUT.fifo_tx.fifo[1], DUT.fifo_rx.fifo[1], DUT.fifo_tx.fifo[2], DUT.fifo_rx.fifo[2], DUT.fifo_tx.fifo[3], DUT.fifo_rx.fifo[3]);
+        // end
     // Error Flags
         always@(*) begin
             if(DUT.RX.tick_count != DUT.TX.tick_count)  // ensures time matching between TX & RX
