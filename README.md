@@ -1,26 +1,29 @@
 # (و ما توفيقى إلا بالله)
-# UART (Universal Asynchrounus Receiver Transmitter)    
+# UART (Universal Asynchrounus Receiver/Transmitter)    
 
-
+The project implements a **UART(Universal Asynchronous Receiver/Transmitter)** module using **Verilog HDL**, designed for FPGA-based digital systems. The design includes both transmitter **uart_tx** and receiver **uart_rx** modules, supporting configurable baud rate, parity checking, data width, fifo depth, and oversampling for noise reduction.      
+The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** if enabled, and finally, **stop-bit**.   
+### Frame Sequence  
+![Frame Sequence](Docs/frame.png)
 
 --- 
 
 ## Table of Contents (TOC)      
 
-- [Folder Structure](#-floder-structure)
-- [Block Diagram & Module Interfaces](#-block-diagram--module-interfaces)
-- [Reusability & Configurable Parameters](#-reusability--configurable-parameters)
-- [FSM](#-fsm)
-- [Testbenches](#-testbenches)
-    - [Top TB](#-top-tb)
-    - [RX TB](#-rx-tb)
-    - [TX TB](#-tx-tb)
-    - [FIFO TB](#-fifo-tb)
-    - [Baud Generator TB](#-baud-generator-tb)
-- [How to Run](#-how-to-run)
-- [Future Work](#-future-work)
-- [Author](#-author)
-- [NOTEs](#-notes)
+- ![Folder Structure](#-floder-structure)
+- ![Block Diagram & Module Interfaces](#-block-diagram--module-interfaces)
+- ![Reusability & Configurable Parameters](#-reusability--configurable-parameters)
+- ![FSM](#-fsm)
+- ![Testbenches](#-testbenches)
+    - ![Top TB](#-top-tb)
+    - ![RX TB](#-rx-tb)
+    - ![TX TB](#-tx-tb)
+    - ![FIFO TB](#-fifo-tb)
+    - ![Baud Generator TB](#-baud-generator-tb)
+- ![How to Run](#-how-to-run)
+- ![Future Work](#-future-work)
+- ![Author](#-author)
+- ![NOTEs](#-notes)
 
 ---         
 
@@ -68,7 +71,7 @@ The design consists of 5 modules: **TX**, **RX**, **Baud Generator**, **FIFO_TX*
 ## Reusability & Configurable Parameters        
 
 The design is considered **Fully Parameterized**. It has 9 parametrs.       
-### Parameters Declaration      
+### Parameter Declaration      
 ![Parameters](Docs/parameters.png)      
 
 - **BAUD**: Baud rate per second. `uart_baudgen` generates a tick pulse every **BAUD** clk cycles. Default value & most common rate used is *9600*.
