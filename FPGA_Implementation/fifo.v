@@ -33,10 +33,10 @@ module fifo#
         begin
             if(rst)
                 begin
-                    head <= '0;                  
-                    tail <= '0;
-                    rd_data <= '0;
-                    fifo_count <= '0;
+                    head <= 0;                  
+                    tail <= 0;
+                    rd_data <= 0;
+                    fifo_count <= 0;
                 end
             else 
                 begin
@@ -47,18 +47,18 @@ module fifo#
                     if(wr_en && !full)
                         begin
                             fifo[tail] <= wr_data;
-                            tail <= (tail == depth-1)? '0 : tail + 1;
+                            tail <= (tail == depth-1)? 0 : tail + 1;
                         end
                     if(rd_en && !empty)
                         begin
                             rd_data <= fifo[head];
-                            head <= (head == depth-1)? '0 : head + 1;
+                            head <= (head == depth-1)? 0 : head + 1;
                         end
                 end
         end
     //statue flags logic
     assign full = (fifo_count == depth);
-    assign empty = (fifo_count == '0);
+    assign empty = (fifo_count == 0);
     assign almost_full = (fifo_count >= almost_full_thr);
     assign almost_empty = (fifo_count <= almost_empty_thr);
 endmodule
