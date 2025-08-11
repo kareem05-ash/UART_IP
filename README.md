@@ -10,24 +10,24 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 
 ## Table of Contents (TOC)      
 
-- ![Folder Structure](#-floder-structure)
-- ![Block Diagram & Module Interfaces](#-block-diagram--module-interfaces)
-- ![Reusability & Configurable Parameters](#-reusability--configurable-parameters)
-- ![FSM](#-fsm)
-- ![Testbenches](#-testbenches)
-    - ![Top TB](#-top-tb)
-    - ![RX TB](#-rx-tb)
-    - ![TX TB](#-tx-tb)
-    - ![FIFO TB](#-fifo-tb)
-    - ![Baud Generator TB](#-baud-generator-tb)
-- ![How to Run](#-how-to-run)
-- ![Future Work](#-future-work)
-- ![Author](#-author)
-- ![NOTEs](#-notes)
+- [Folder Structure](#-floder-structure)
+- [Block Diagram & Module Interfaces](#-block-diagram--module-interfaces)
+- [Reusability & Configurable Parameters](#-reusability--configurable-parameters)
+- [FSM](#-fsm)
+- [Testbenches](#-testbenches)
+    - [Top TB](#-top-tb)
+    - [RX TB](#-rx-tb)
+    - [TX TB](#-tx-tb)
+    - [FIFO TB](#-fifo-tb)
+    - [Baud Generator TB](#-baud-generator-tb)
+- [How to Run](#-how-to-run)
+- [Future Work](#-future-work)
+- [Author](#-author)
+- [NOTEs](#-notes)
 
 ---         
 
-## Folder Structure     
+## Folder Structure
 
 ```UART_IP/
 ├── Docs/ # Block Diagram, State Digrams, transcript output, waveform snippets, ....
@@ -58,7 +58,7 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 
 ---         
 
-## Block Diagram & Module Interfaces        
+## Block Diagram & Module Interfaces
 
 The design consists of 5 modules: **TX**, **RX**, **Baud Generator**, **FIFO_TX**, and **FIFO_RX**. Baud Generator module generates a `tick` signal for **TX** and **RX**. Input data `din` get into **FIFO_TX** then **FIFO_TX** feeds **TX** module. Data is transmitted bit-by-bit on line `tx_rx` from **TX** to **RX**. `dout_rx` get into **FIFO_RX** then **FIFO_RX** buffers `dout_rx` as `dout`. 
 
@@ -68,7 +68,7 @@ The design consists of 5 modules: **TX**, **RX**, **Baud Generator**, **FIFO_TX*
 
 ---             
 
-## Reusability & Configurable Parameters        
+## Reusability & Configurable Parameters
 
 The design is considered **Fully Parameterized**. It has 9 parametrs.       
 ### Parameter Declaration      
@@ -86,7 +86,7 @@ The design is considered **Fully Parameterized**. It has 9 parametrs.
 
 ---             
 
-## FSM      
+## FSM
 
 
 
