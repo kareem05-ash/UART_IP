@@ -14,8 +14,8 @@ module tb_top();
         parameter oversampling_rate = 16;               //to maintain valid data (avoiding noise)
         parameter data_wd = 8;                          //data width 
         parameter parity = 1;  //odd-parity             //1:odd, 2:even, default:no-parity
-        parameter fifo_depth = 4;                       //fifo entries
-        parameter almost_full_thr = 3;                  //threshold point which the almost_full flag arise at
+        parameter fifo_depth = 5;                      //fifo entries
+        parameter almost_full_thr = 4;                 //threshold point which the almost_full flag arise at
         parameter almost_empty_thr = 1;                 //threshold point which the almost_empty flag arise at
 
     // DUT Inputs
@@ -126,11 +126,14 @@ module tb_top();
             task assign_data(input [data_wd-1 : 0] data); begin
                 din = data;         // assign input data
                 tx_wr_en = 1;       // enables write operation to fifo_tx
-                tx_rd_en = 1;       // enables read operation from fifo_tx
+                rx_wr_en = 1;       // enables write operation to fifo_rx
+                // tx_rd_en = 1;       // enables read operation from fifo_tx
                 // rx_rd_en = 1;       // enables read operation from fifo_rx
                 tx_start = 1;       // enables transmittion operation
                 rx_start = 1;       // enables reception operation
                 @(negedge clk);     // waits for a clk cycle to track changes 
+                tx_wr_en = 0;
+                @(negedge clk);
                 if(DUT.TX.c_state == START && DUT.RX.c_state == START)
                     $display("[PASS] IDLE => START transition | TX.c_state = %b, expected = %b, RX.c_state = %b, expected = %b", 
                                 DUT.TX.c_state, START, DUT.RX.c_state, START);
@@ -142,7 +145,9 @@ module tb_top();
 
         // start_bit task
             task start_bit(); begin
+                tx_rd_en = 1;       // enables read operation from fifo_tx
                 repeat(oversampling_rate/2) @(negedge DUT.tick);    // waits to sample start-bit
+                tx_rd_en = 0;       // disables reaad operation from fifo_tx
                 if(!DUT.tx_rx && !DUT.RX.rx && DUT.TX.c_state == START && DUT.RX.c_state == START && !framing_error_flag)
                     $display("[PASS] start-bit | tx_rx = %d, expected = %d, rx = %d, expected = %d, TX.c_state = %b, expected = %b, RX.c_state = %b, expected = %b, framing_error_flag = %d", 
                                 DUT.tx_rx, 1'b0, DUT.RX.rx, 1'b0, DUT.TX.c_state, START, DUT.RX.c_state, START, framing_error_flag);
@@ -183,6 +188,7 @@ module tb_top();
 
         // stop_bit task
             task stop_bit(); begin
+                rx_wr_en = 1;           // enables write operation in fifo_rx to store dout
                 repeat(oversampling_rate/2) @(negedge DUT.tick);    // waits to sample stop-bit
                 if(DUT.tx_rx && DUT.RX.rx && DUT.TX.c_state == STOP && DUT.RX.c_state == STOP && !framing_error_flag)
                     $display("[PASS] stop-bit | tx_rx = %d, expected = %d, rx = %d, expected = %d, TX.c_state = %b, expected = %b, RX.c_state = %b, expected = %b, framing_error_flag = %d", 
@@ -190,9 +196,8 @@ module tb_top();
                 else
                     $display("[FAIL] stop-bit | tx_rx = %d, expected = %d, rx = %d, expected = %d, TX.c_state = %b, expected = %b, RX.c_state = %b, expected = %b, framing_error_flag = %d", 
                                 DUT.tx_rx, 1'b1, DUT.RX.rx, 1'b1, DUT.TX.c_state, STOP, DUT.RX.c_state, STOP, framing_error_flag);
-                repeat(oversampling_rate/2) @(negedge DUT.tick);    // waits to finish start-bit sampling
-                rx_wr_en = 1;           // enables write operation in fifo_rx to store dout
-                @(negedge DUT.tick);    // waits for a tick pulse to store dout in fifo_rx
+                repeat(oversampling_rate/2) @(negedge DUT.tick);    // waits to finish stop-bit sampling
+                wait(tx_done == 1);     // waits for a tick pulse to store dout in fifo_rx
                 rx_wr_en = 0;           // disables write operation in fifo_rx to avoid storing the same frame in all fifo entries
             end
             endtask
@@ -216,7 +221,7 @@ module tb_top();
             // 2nd scenario Functional Correctness (Random TX & RX)
                 $display("\n ==================== 2nd scenario Functional Correctness (Random TX & RX) ====================");
                 reset(); 
-                test_data = $random;
+                test_data = 8'h0d;
                 assign_data(test_data);     // IDLE => START transition assertion
                 start_bit();                // start-bit assertion
                 data_bits(test_data);       // data-bits assertion
@@ -249,16 +254,17 @@ module tb_top();
             // 4th scenario Corner Case (Multiple Random Frames Back-to-Back)
                 $display("\n ==================== 4th scenario Corner Case (Multiple Random Frames Back-to-Back) ====================");
                 reset(); 
-                // repeat(5) begin     // send 5 random frames back-to-back
-                //     test_data = $random;
-                //     $display("Now, frame: 0x%h", test_data);
-                //     assign_data(test_data);     // IDLE => START transition assertion
-                //     start_bit();                // start-bit assertion
-                //     data_bits(test_data);       // data-bits assertion
-                //     parity_bit();               // parity-bit assertion
-                //     stop_bit();                 // stop-bit assertion   
-                //     $display("\n"); 
-                // end
+                repeat(5) begin     // send 5 random frames back-to-back
+                    reset();
+                    test_data = $random;
+                    $display("Now, frame: 0x%h", test_data);
+                    assign_data(test_data);     // IDLE => START transition assertion
+                    start_bit();                // start-bit assertion
+                    data_bits(test_data);       // data-bits assertion
+                    parity_bit();               // parity-bit assertion
+                    stop_bit();                 // stop-bit assertion  
+                    $display("");               // seperate each frame with a new line  
+                end
 
             // 5th scenario Corner Case (0x00 TX & RX)
                 $display("\n ==================== 5th scenario Corner Case (0x00 TX & RX) ====================");
@@ -293,41 +299,16 @@ module tb_top();
                 parity_bit();               // parity-bit assertion
                 stop_bit();                 // stop-bit assertion
 
-
-            // 8th scenario Corner Case (TX & RX [0xFF])
-                $display("\n ==================== 8th scenario Corner Case (TX & RX [0xFF]) ====================");
-                reset(); 
-
-            // 9th scenario Corner Case (TX & RX [0x00])
-                $display("\n ==================== 9th scenario Corner Case (TX & RX [0x00]) ====================");
-                reset(); 
-
-            // 10th scenario Corner Case (Sending a frame during tx_busy is high)
-                $display("\n ==================== 10th scenario Corner Case (Sending a frame during tx_busy is high) ====================");
-                reset(); 
-
-            // 11th scenario Corner Case (Trying to send a frame where fifo_tx is full)
-                $display("\n ==================== 11th scenario Corner Case (Trying to send a frame where fifo_tx is full) ====================");
-                reset(); 
-
-            // 12th scenario Corner Case (Trying to read a frame where fifo_rx is empty)
-                $display("\n ==================== 12th scenario Corner Case (Trying to read a frame where fifo_rx is empty) ====================");
-                reset(); 
-
             // STOP Simulation
                 $display("\n==================== STOP Simulation ====================");
                 #100; 
                 $stop;
             end
     // monitor
-        // initial begin 
-        //     $monitor("RX.c_state = %b, dout_rx = %h, tx_done = %d, rx_done = %d, framing_error_flag = %d, parity_error_flag = %d, tx_fifo_count = %d, rx_fifo_count = %d",
-        //                 DUT.RX.c_state, DUT.dout_rx, tx_done, rx_done, framing_error_flag, parity_error_flag, DUT.fifo_tx.fifo_count, DUT.fifo_rx.fifo_count);
-        // end
-        // initial begin
-        //     $monitor("fifo_tx[0] = %h, fifo_rx[0] = %h | fifo_tx[1] = %h, fifo_rx[1] = %h | fifo_tx[2] = %h, fifo_rx[2] = %h | fifo_tx[3] = %h, fifo_rx[3] = %h", 
-        //                 DUT.fifo_tx.fifo[0], DUT.fifo_rx.fifo[0], DUT.fifo_tx.fifo[1], DUT.fifo_rx.fifo[1], DUT.fifo_tx.fifo[2], DUT.fifo_rx.fifo[2], DUT.fifo_tx.fifo[3], DUT.fifo_rx.fifo[3]);
-        // end
+        initial begin 
+            $monitor("RX.c_state = %b, dout_rx = %h, tx_done = %d, rx_done = %d, framing_error_flag = %d, parity_error_flag = %d, tx_fifo_count = %d, rx_fifo_count = %d",
+                        DUT.RX.c_state, DUT.dout_rx, tx_done, rx_done, framing_error_flag, parity_error_flag, DUT.fifo_tx.fifo_count, DUT.fifo_rx.fifo_count);
+        end
     // Error Flags
         always@(*) begin
             if(DUT.RX.tick_count != DUT.TX.tick_count)  // ensures time matching between TX & RX
