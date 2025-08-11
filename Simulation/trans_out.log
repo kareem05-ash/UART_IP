@@ -148,3 +148,5 @@
 # ** Note: $stop    : tb_top.v(305)
 #    Time: 20345390 ns  Iteration: 0  Instance: /tb_top
 # Break in Module tb_top at tb_top.v line 305
+# End time: 12:27:30 on Aug 11,2025, Elapsed time: 0:23:14
+# Errors: 0, Warnings: 2
