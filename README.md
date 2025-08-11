@@ -10,14 +10,14 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 
 ## Table of Contents (TOC)      
 
-- [Folder Structure](#floder-structure)
+- [Folder Structure](#folder-structure)
 - [Block Diagram & Module Interfaces](#block-diagram--module-interfaces)
 - [Reusability & Configurable Parameters](#reusability--configurable-parameters)
 - [FSM](#fsm)
 - [Testbenches](#testbenches)
     - [Top TB](#top-tb)
-    - [RX TB](#rx-tb)
     - [TX TB](#tx-tb)
+    - [RX TB](#rx-tb)
     - [FIFO TB](#fifo-tb)
     - [Baud Generator TB](#baud-generator-tb)
 - [How to Run](#how-to-run)
@@ -29,7 +29,8 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 
 ## Folder Structure
 
-```UART_IP/
+```
+UART_IP/
 ├── Docs/ # Block Diagram, State Digrams, transcript output, waveform snippets, ....
 ├── RTL/ # RTL Design
 │   ├── uart_top.v
@@ -88,6 +89,162 @@ The design is considered **Fully Parameterized**. It has 9 parametrs.
 
 ## FSM
 
+---         
 
+## Testbenches
+
+### Top TB
+
+This testbench verifies the functinality of the protocol. It tests normal scenarios and edge case scenarios. It test 7 real world scenarios: 
+- 1st scenario Functional Correctness (Reset Behavior)
+- 2nd scenario Functional Correctness (Random TX & RX)
+- 3rd scenario Functional Correctness (Reset during sending a random frame)
+- 4th scenario Corner Case (Multiple Random Frames Back-to-Back)
+- 5th scenario Corner Case (0x00 TX & RX)
+- 6th scenario Corner Case (0xFF TX & RX)
+- 7th scenario Corner Case (Trying to send a frame during another is being sent)            
+
+For source code: [click here](TB/tb_top.v)
+
+#### **Top** Transcript Output
+
+![first](Docs/tb_top_output1.png)
+![second](Docs/tb_top_output2.png)
+![third](Docs/tb_top_output3.png)
+![fourth](Docs/tb_top_output4.png)
+![fifth](Docs/tb_top_output5.png)
+
+#### **Top** Waveform
+
+![waveform](Docs/top_waveform.png)
+
+---             
+
+### TX TB
+
+This testbech verifies the functionality of the **uart_tx** module. It tests normal scenarios and edge case scenarios. It test 7 real world scenarios: 
+- 1st scenario Functional Correctness : (Reset Behavior)
+- 2nd scenario Functional Correctness : (Transmit Frame [8'b1101_0011] with odd-parity)
+- 3rd scenario Functional Correctness : (Transmit Multiple Back-to-Back Random Frames[5 frames])
+- 4th scenario Corner Case : (tx_start is high during Transmitting a frame)
+- 5th scenario Corner Case : (Reset during transmittion operation)
+- 6th scenario Corner Case : (Transmit a frame [0xFF])
+- 7th scenario Corner Case : (Transmit a frame [0x00])          
+
+For source code: [click here](TB/tb_tx.v)
+
+#### **uart_tx** Transcript Output
+
+![first](Docs/tb_output_tx_1.png)
+![second](Docs/tb_output_tx_2.png)
+![third](Docs/tb_output_tx_3.png)
+![fourth](Docs/tb_output_tx_4.png)
+![fifth](Docs/tb_output_tx_5.png)
+
+#### **uart_tx** Waveform
+
+![waveform](Docs/tx_waveform.png)
+
+---             
+
+### RX TB
+
+This testbech verifies the functionality of the **uart_rx** module. It tests normal scenarios and edge case scenarios. It test 6 real world scenarios: 
+- 1st scenario Functional Correctness : (Reset Behavior)
+- 2nd scenario Functional Correctness : (Sendign a Frame [0xA5])
+- 3rd scenario Corner Case : (noise on line during IDLE [Glitch Rejection Test])
+- 4th scenario Corner Case : (idle line for so long, then valid frame [0x3C])
+- 5th scenario Corner Case : (receiveing frame [0xFF])
+- 6th scenario Corner Case : (Transmit a frame [0x00])          
+
+For source code: [click here](TB/tb_rx.v)
+
+#### **uart_rx** Transcript Output
+
+![first](Docs/tb_rx_output.png)
+
+#### **uart_rx** Waveform
+
+![waveform](Docs/rx_waveform.png)
+
+---                 
+
+### FIFO TB
+
+This testbech verifies the functionality of the **fifo_tx** & **fifo_rx** modules. It tests normal scenarios and edge case scenarios. It test 7 real world scenarios:
+- 1st scenario Functional Correctness : (Reset Behavior)
+- 2nd scenario Functional Correctness : (full detection)
+- 3rd scenario Functional Correctness : (empty detection)
+- 4th scenario Functional Correctness : (almost_full detection)
+- 5th scenario Functional Correctness : (almost_empty detection)
+- 6th scenario Functional Correctness : (FIFO validation using writememh, readmemh)
+- 7th scenario Corner Case : (trying write operation even fifo is full)          
+
+For source code: [click here](TB/tb_fifo.v)
+
+#### **fifo** Transcript Output
+
+![first](Docs/tb_fifo_output.png)
+
+#### **fifo** Waveform
+
+![waveform](Docs/fifo_waveform.png)
+
+---         
+
+### Baud Generator TB
+
+This testbench verifies the functionality of **uart_baudgen** module. It verifies that there is a **tick** pulse after the intended clk cycle based on **BAUD** & **oversampling_rate**.        
+
+For source code: [click here](TB/tb_fifo.v)
+
+#### **uart_baudgen** Transcript
+
+![first](Docs/tb_baudgen_output.png)
+
+#### **uart_baudgen** Waveform  
+
+![waveform](Docs/baudgen_wafeform.png)
+
+---         
+
+---         
+
+## How to Run
+
+**Follow these instructions** 
+
+1. **Clone the repo to your local PC:** write this instruction in terminal
+``` bash
+git clone https://github.com/kareem05-ash/UART_IP.git
+```
+
+2. **Open **QuestaSim** or **ModelSim.****
+3. **Navigate to the transcript:** then write `do top.do`
+
+4. **Observe the simulation results.**
+
+---         
+
+## Future Work
+
+- Implement the desing using an **FPGA Board** on **Vivado**.
+- Apply **Formal Verification** on the protocol using **SystemVerilog Assertions (SVA)** and UVM environment.
+- **SoC Integration**: integrate the protocol with a **Soc** to deal with high level integration.
+
+---         
+
+## Author
+
+- **E-Mail**: (kareem.ash05@gmail.com)      
+- **Linkedin**: [Kareem Ashraf](www.linkedin.com/in/kareem-ashraf-9aba48348)       
+- **GitHub**: (https://github.com/kareem05-ash)
+- **Phone Number**: +201002321067 / +201154398353       
+
+---         
+
+## NOTEs
+
+I'm waiting for your feedback and contributions. Feel free to send me pull requests. This project is part of my **self-learning** journey. 
 
 ---         
