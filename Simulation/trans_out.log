@@ -1,0 +1,412 @@
+# 
+#  ==================== 1st scenario Functional Correctness (Reset Behavior) ====================
+# [PASS] | tx_full = 0, tx_empty = 1, tx_almost_full = 0, tx_almost_empty = 1, tx_done = 0, tx_busy = 0, 
+# rx_full = 0, rx_empty = 1, rx_almost_full = 0, rx_almost_empty = 1, rx_done = 0, rx_busy = 0, 
+# framing_error_flag = 0, parity_error_flag = 0, TX.c_state = 000001, RX.c_state = 000001
+# 
+#  ==================== 2nd scenario Functional Correctness (Random TX & RX) ====================
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# 
+#  ==================== 3rd scenario Functional Correctness (Reset during sending a random frame) ====================
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# Now, apply rst
+# After rst, this is the behavior
+# [PASS] | tx_full = 0, tx_empty = 1, tx_almost_full = 0, tx_almost_empty = 1, tx_done = 0, tx_busy = 0, 
+# rx_full = 0, rx_empty = 1, rx_almost_full = 0, rx_almost_empty = 1, rx_done = 0, rx_busy = 0, 
+# framing_error_flag = 0, parity_error_flag = 0, TX.c_state = 000001, RX.c_state = 000001
+# 
+#  ==================== 4th scenario Corner Case (Multiple Random Frames Back-to-Back) ====================
+# 
+#  ==================== 5th scenario Corner Case (0x00 TX & RX) ====================
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# 
+#  ==================== 6th scenario Corner Case (0xFF TX & RX) ====================
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# 
+#  ==================== 7th scenario Corner Case (Trying to send a frame during another is being sent) ====================
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# 
+#  ==================== 8th scenario Corner Case (TX & RX [0xFF]) ====================
+# 
+#  ==================== 9th scenario Corner Case (TX & RX [0x00]) ====================
+# 
+#  ==================== 10th scenario Corner Case (Sending a frame during tx_busy is high) ====================
+# 
+#  ==================== 11th scenario Corner Case (Trying to send a frame where fifo_tx is full) ====================
+# 
+#  ==================== 12th scenario Corner Case (Trying to read a frame where fifo_rx is empty) ====================
+# 
+# ==================== STOP Simulation ====================
+# ** Note: $stop    : tb_top.v(320)
+#    Time: 4706380 ns  Iteration: 0  Instance: /tb_top
+# Break in Module tb_top at tb_top.v line 320
+quit sim
+# unknown switch: sim
+quit sim *
+# unknown switch: sim *
+quit sim
+# unknown switch: sim
+finish
+# invalid command name "finish"
+project compileall
+# Compile of fifo.v was successful.
+# Compile of tb_baudgen.v was successful.
+# Compile of tb_fifo.v was successful.
+# Compile of tb_rx.v was successful.
+# Compile of tb_top.v was successful.
+# Compile of tb_tx.v was successful.
+# Compile of uart_baudgen.v was successful.
+# Compile of uart_rx.v was successful.
+# Compile of uart_top.v was successful.
+# Compile of uart_tx.v was successful.
+# 10 compiles, 0 failed with no errors.
+do top.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 10.6c Compiler 2017.07 Jul 26 2017
+# Start time: 09:32:44 on Aug 11,2025
+# vlog -reportprogress 300 uart_top.v tb_top.v 
+# -- Compiling module uart_top
+# -- Compiling module tb_top
+# 
+# Top level modules:
+# 	tb_top
+# End time: 09:32:44 on Aug 11,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# End time: 09:32:46 on Aug 11,2025, Elapsed time: 0:04:29
+# Errors: 4, Warnings: 0
+# vsim -voptargs="+acc" work.tb_top 
+# Start time: 09:32:46 on Aug 11,2025
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading work.tb_top(fast)
+# Loading work.uart_top(fast)
+# Loading work.uart_baudgen(fast)
+# Loading work.uart_tx(fast)
+# Loading work.fifo(fast)
+# Loading work.uart_rx(fast)
+# 
+#  ==================== 1st scenario Functional Correctness (Reset Behavior) ====================
+# fifo_tx[0] = xx, fifo_rx[0] = xx | fifo_tx[1] = xx, fifo_rx[1] = xx | fifo_tx[2] = xx, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# [PASS] | tx_full = 0, tx_empty = 1, tx_almost_full = 0, tx_almost_empty = 1, tx_done = 0, tx_busy = 0, 
+# rx_full = 0, rx_empty = 1, rx_almost_full = 0, rx_almost_empty = 1, rx_done = 0, rx_busy = 0, 
+# framing_error_flag = 0, parity_error_flag = 0, TX.c_state = 000001, RX.c_state = 000001
+# 
+#  ==================== 2nd scenario Functional Correctness (Random TX & RX) ====================
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = xx, fifo_rx[1] = xx | fifo_tx[2] = xx, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = xx, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = 24, fifo_rx[3] = xx
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = 24, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = 24, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# 
+#  ==================== 3rd scenario Functional Correctness (Reset during sending a random frame) ====================
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# Now, apply rst
+# After rst, this is the behavior
+# [PASS] | tx_full = 0, tx_empty = 1, tx_almost_full = 0, tx_almost_empty = 1, tx_done = 0, tx_busy = 0, 
+# rx_full = 0, rx_empty = 1, rx_almost_full = 0, rx_almost_empty = 1, rx_done = 0, rx_busy = 0, 
+# framing_error_flag = 0, parity_error_flag = 0, TX.c_state = 000001, RX.c_state = 000001
+# 
+#  ==================== 4th scenario Corner Case (Multiple Random Frames Back-to-Back) ====================
+# 
+#  ==================== 5th scenario Corner Case (0x00 TX & RX) ====================
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# 
+#  ==================== 6th scenario Corner Case (0xFF TX & RX) ====================
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = ff, fifo_rx[3] = 00
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = ff, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = ff, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# 
+#  ==================== 7th scenario Corner Case (Trying to send a frame during another is being sent) ====================
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = a5, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = a5, fifo_rx[1] = ff | fifo_tx[2] = a5, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = a5, fifo_rx[1] = ff | fifo_tx[2] = a5, fifo_rx[2] = ff | fifo_tx[3] = a5, fifo_rx[3] = ff
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = a5, fifo_rx[2] = ff | fifo_tx[3] = a5, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = a5, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = a5 | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = a5 | fifo_tx[2] = 3c, fifo_rx[2] = a5 | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = a5 | fifo_tx[2] = 3c, fifo_rx[2] = a5 | fifo_tx[3] = 3c, fifo_rx[3] = a5
+# 
+#  ==================== 8th scenario Corner Case (TX & RX [0xFF]) ====================
+# 
+#  ==================== 9th scenario Corner Case (TX & RX [0x00]) ====================
+# 
+#  ==================== 10th scenario Corner Case (Sending a frame during tx_busy is high) ====================
+# 
+#  ==================== 11th scenario Corner Case (Trying to send a frame where fifo_tx is full) ====================
+# 
+#  ==================== 12th scenario Corner Case (Trying to read a frame where fifo_rx is empty) ====================
+# 
+# ==================== STOP Simulation ====================
+# ** Note: $stop    : tb_top.v(320)
+#    Time: 4706380 ns  Iteration: 0  Instance: /tb_top
+# Break in Module tb_top at tb_top.v line 320
+quit-sim
+# invalid command name "quit-sim"
+quit -sim
+# End time: 09:34:18 on Aug 11,2025, Elapsed time: 0:01:32
+# Errors: 1, Warnings: 0
+do top.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# QuestaSim-64 vlog 10.6c Compiler 2017.07 Jul 26 2017
+# Start time: 09:34:24 on Aug 11,2025
+# vlog -reportprogress 300 uart_top.v tb_top.v 
+# -- Compiling module uart_top
+# -- Compiling module tb_top
+# 
+# Top level modules:
+# 	tb_top
+# End time: 09:34:24 on Aug 11,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -voptargs="+acc" work.tb_top 
+# Start time: 09:34:24 on Aug 11,2025
+# ** Note: (vsim-8009) Loading existing optimized design _opt1
+# Loading work.tb_top(fast)
+# Loading work.uart_top(fast)
+# Loading work.uart_baudgen(fast)
+# Loading work.uart_tx(fast)
+# Loading work.fifo(fast)
+# Loading work.uart_rx(fast)
+# 
+#  ==================== 1st scenario Functional Correctness (Reset Behavior) ====================
+# fifo_tx[0] = xx, fifo_rx[0] = xx | fifo_tx[1] = xx, fifo_rx[1] = xx | fifo_tx[2] = xx, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# [PASS] | tx_full = 0, tx_empty = 1, tx_almost_full = 0, tx_almost_empty = 1, tx_done = 0, tx_busy = 0, 
+# rx_full = 0, rx_empty = 1, rx_almost_full = 0, rx_almost_empty = 1, rx_done = 0, rx_busy = 0, 
+# framing_error_flag = 0, parity_error_flag = 0, TX.c_state = 000001, RX.c_state = 000001
+# 
+#  ==================== 2nd scenario Functional Correctness (Random TX & RX) ====================
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = xx, fifo_rx[1] = xx | fifo_tx[2] = xx, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = xx, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = xx, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = xx | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = 24, fifo_rx[3] = xx
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = xx | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = 24, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = xx | fifo_tx[3] = 24, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = xx
+# fifo_tx[0] = 24, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# 
+#  ==================== 3rd scenario Functional Correctness (Reset during sending a random frame) ====================
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 24, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 24, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 24, fifo_rx[3] = 24
+# fifo_tx[0] = 81, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# Now, apply rst
+# After rst, this is the behavior
+# [PASS] | tx_full = 0, tx_empty = 1, tx_almost_full = 0, tx_almost_empty = 1, tx_done = 0, tx_busy = 0, 
+# rx_full = 0, rx_empty = 1, rx_almost_full = 0, rx_almost_empty = 1, rx_done = 0, rx_busy = 0, 
+# framing_error_flag = 0, parity_error_flag = 0, TX.c_state = 000001, RX.c_state = 000001
+# 
+#  ==================== 4th scenario Corner Case (Multiple Random Frames Back-to-Back) ====================
+# 
+#  ==================== 5th scenario Corner Case (0x00 TX & RX) ====================
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 81, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 81, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 81, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 24 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 24 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 24 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 24
+# fifo_tx[0] = 00, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# 
+#  ==================== 6th scenario Corner Case (0xFF TX & RX) ====================
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = 00, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = 00, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = 00, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = 00 | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = ff, fifo_rx[3] = 00
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = 00 | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = ff, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = 00 | fifo_tx[3] = ff, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = 00
+# fifo_tx[0] = ff, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# 
+#  ==================== 7th scenario Corner Case (Trying to send a frame during another is being sent) ====================
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = ff, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# [PASS] IDLE => START transition | TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = a5, fifo_rx[1] = ff | fifo_tx[2] = ff, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = a5, fifo_rx[1] = ff | fifo_tx[2] = a5, fifo_rx[2] = ff | fifo_tx[3] = ff, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = a5, fifo_rx[1] = ff | fifo_tx[2] = a5, fifo_rx[2] = ff | fifo_tx[3] = a5, fifo_rx[3] = ff
+# [PASS] start-bit | tx_rx = 0, expected = 0, rx = 0, expected = 0, TX.c_state = 000010, expected = 000010, RX.c_state = 000010, expected = 000010, framing_error_flag = 0
+# [PASS] data-bit[          0] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          1] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          2] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          3] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          4] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          5] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          6] | sent data-bit = 0, expected = 0, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# [PASS] data-bit[          7] | sent data-bit = 1, expected = 1, TX.c_state = 000100, expected = 000100, RX.c_state = 000100, expected = 000100, framing_error_flag = 0
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = a5, fifo_rx[2] = ff | fifo_tx[3] = a5, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = a5, fifo_rx[3] = ff
+# fifo_tx[0] = a5, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = ff | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# [PASS] parity-bit | parity-bit sent = 1, expected = 1, TX.c_state = 001000, expected = 001000, RX.c_state = 001000, expected = 001000, framing_error_flag = 0, parity_error_flag = 0
+# [PASS] stop-bit | tx_rx = 1, expected = 1, rx = 1, expected = 1, TX.c_state = 010000, expected = 010000, RX.c_state = 010000, expected = 010000, framing_error_flag = 0
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = ff | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = a5 | fifo_tx[2] = 3c, fifo_rx[2] = ff | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = a5 | fifo_tx[2] = 3c, fifo_rx[2] = a5 | fifo_tx[3] = 3c, fifo_rx[3] = ff
+# fifo_tx[0] = 3c, fifo_rx[0] = a5 | fifo_tx[1] = 3c, fifo_rx[1] = a5 | fifo_tx[2] = 3c, fifo_rx[2] = a5 | fifo_tx[3] = 3c, fifo_rx[3] = a5
+# 
+#  ==================== 8th scenario Corner Case (TX & RX [0xFF]) ====================
+# 
+#  ==================== 9th scenario Corner Case (TX & RX [0x00]) ====================
+# 
+#  ==================== 10th scenario Corner Case (Sending a frame during tx_busy is high) ====================
+# 
+#  ==================== 11th scenario Corner Case (Trying to send a frame where fifo_tx is full) ====================
+# 
+#  ==================== 12th scenario Corner Case (Trying to read a frame where fifo_rx is empty) ====================
+# 
+# ==================== STOP Simulation ====================
+# ** Note: $stop    : tb_top.v(320)
+#    Time: 4706380 ns  Iteration: 0  Instance: /tb_top
+# Break in Module tb_top at tb_top.v line 320
