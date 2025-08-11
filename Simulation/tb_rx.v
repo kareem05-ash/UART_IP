@@ -206,11 +206,8 @@ module tb_rx();
                 $display("[PASS] seventh scenario (Corner Case : receiveing frame [0x00]) : dout = 0x%h, expected = 0x%h", 
                         dout, byte);
 
-
-
-
-                                //STOP Simulation
-            #100; 
+        //STOP Simulation
+            #100;
             $stop;
         end
     // initial
