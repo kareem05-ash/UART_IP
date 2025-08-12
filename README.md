@@ -1,5 +1,5 @@
 # (و ما توفيقى إلا بالله)
-# UART (Universal Asynchrounus Receiver/Transmitter)    
+# 🧠 UART (Universal Asynchrounus Receiver/Transmitter)    
 
 The project implements a **UART(Universal Asynchronous Receiver/Transmitter)** module using **Verilog HDL**, designed for FPGA-based digital systems. The design includes both transmitter **uart_tx** and receiver **uart_rx** modules, supporting configurable baud rate, parity checking, data width, fifo depth, and oversampling for noise reduction.      
 The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** if enabled, and finally, **stop-bit**.   
@@ -8,26 +8,26 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 
 --- 
 
-## Table of Contents (TOC)      
+## 📚 Table of Contents (TOC)      
 
-- [Folder Structure](#folder-structure)
+- [Folder Structure](#-folder-structure)
 - [Block Diagram & Module Interfaces](#block-diagram--module-interfaces)
 - [Reusability & Configurable Parameters](#reusability--configurable-parameters)
 - [FSM](#fsm)
-- [Testbenches](#testbenches)
+- [Testbenches](#-testbenches)
     - [Top TB](#top-tb)
     - [TX TB](#tx-tb)
     - [RX TB](#rx-tb)
     - [FIFO TB](#fifo-tb)
     - [Baud Generator TB](#baud-generator-tb)
-- [How to Run](#how-to-run)
-- [Future Work](#future-work)
-- [Author](#author)
-- [NOTEs](#notes)
+- [How to Run](#-how-to-run)
+- [Future Work](#-future-work)
+- [Author](#-author)
+- [NOTEs](#-notes)
 
 ---         
 
-## Folder Structure
+## 📁 Folder Structure
 
 ```
 UART_IP/
@@ -61,7 +61,7 @@ UART_IP/
 
 ## Block Diagram & Module Interfaces
 
-The design consists of 5 modules: **TX**, **RX**, **Baud Generator**, **FIFO_TX**, and **FIFO_RX**. Baud Generator module generates a `tick` signal for **TX** and **RX**. Input data `din` get into **FIFO_TX** then **FIFO_TX** feeds **TX** module. Data is transmitted bit-by-bit on line `tx_rx` from **TX** to **RX**. `dout_rx` get into **FIFO_RX** then **FIFO_RX** buffers `dout_rx` as `dout`. 
+The design consists of 5 modules: **TX**, **RX**, **Baud Generator**, **FIFO_TX**, and **FIFO_RX**. Baud Generator module generates a `tick` signal for **TX** and **RX**. Input data `din` gets into **FIFO_TX** then **FIFO_TX** feeds **TX** module. Data is transmitted bit-by-bit on line `tx_rx` from **TX** to **RX**. `dout_rx` gets into **FIFO_RX** then **FIFO_RX** buffers `dout_rx` as `dout`. 
 
 ### Block Diagram       
 
@@ -81,7 +81,7 @@ The design is considered **Fully Parameterized**. It has 9 parametrs.
 - **oversampling_rate**: Used to sample data bits to avoid noise or glitches on line. Default value & most common rate used is *16*.    
 - **data_wb**: Data Width. Default value is *8*. 
 - **parity**: This for parirty enable & type. If(parity == 1), **odd-parity**. Else if(parity == 2), **even-parity**. Else, no-parity: parity is disabled. Default value is *1: odd-parity*. 
-- **fifo_depth**: Number of max frames can **FIFO_TX** or **FIFO_RX** can store. Default value is *256*.    
+- **fifo_depth**: Number of max frames can **FIFO_TX** or **FIFO_RX** store. Default value is *256*.    
 - **almost_full_thr**: This is for FIFOs. If the FIFO stores frames greater than or equal **almost_full_thr**, Flag **almost_full** goes high. Default value is *240*.        
 - **almost_empty_thr**: This is for FIFOs. If the FIFO stores frames less than or equal **almost_empty_thr**, Flag **almost_empty** goes high. Default value is *16*.           
 
@@ -89,9 +89,29 @@ The design is considered **Fully Parameterized**. It has 9 parametrs.
 
 ## FSM
 
+The design works under a finite state machine **FSM**, consists of six states.  
+
+### State Encoding Table (One-Hot)
+Used **One-Hot** encoding to minimize glitches and enhance effeciency.
+
+| # |   Encoding    |   Name    |   Description                                                             |
+|---|---------------|-----------|---------------------------------------------------------------------------|
+| 1 |   6'b000_001  | **IDLE**  | Waits for signal **tx_start** and **rx_start**.                           |
+| 2 |   6'b000_010  | **START** | **TX** sends **start-bit** & then **RX** receives it.                     |
+| 3 |   6'b000_100  | **DATA**  | **TX** sends **data-bits** & then **RX** receives them.                   |
+| 4 |   6'b001_000  | **PARITY**| **TX** sends **parity-bit** & then **RX** receives it.                    | 
+| 5 |   6'b010_000  | **STOP**  | **TX** sends **stop-bit** & then **RX** receives it.                      |
+| 6 |   6'b100_000  | **DONE**  | Waits to raise **tx_done** and **rx_done** signals.                       |
+
+### State Digrame for **TX FSM**    
+![TX State Diagram](Docs/state_diagram_tx.png)
+
+### State Digrame for **RX FSM**    
+![RX State Diagram](Docs/state_diagram_rx.png)
+
 ---         
 
-## Testbenches
+## 🧪 Testbenches
 
 ### Top TB
 
@@ -106,7 +126,7 @@ This testbench verifies the functinality of the protocol. It tests normal scenar
 
 For source code: [click here](TB/tb_top.v)
 
-#### **Top** Transcript Output
+#### ✅ **Top** Transcript Output
 
 ![first](Docs/tb_top_output1.png)
 ![second](Docs/tb_top_output2.png)
@@ -114,7 +134,7 @@ For source code: [click here](TB/tb_top.v)
 ![fourth](Docs/tb_top_output4.png)
 ![fifth](Docs/tb_top_output5.png)
 
-#### **Top** Waveform
+#### ✅ **Top** Waveform
 
 ![waveform](Docs/top_waveform.png)
 
@@ -133,7 +153,7 @@ This testbech verifies the functionality of the **uart_tx** module. It tests nor
 
 For source code: [click here](TB/tb_tx.v)
 
-#### **uart_tx** Transcript Output
+#### ✅ **uart_tx** Transcript Output
 
 ![first](Docs/tb_output_tx_1.png)
 ![second](Docs/tb_output_tx_2.png)
@@ -141,7 +161,7 @@ For source code: [click here](TB/tb_tx.v)
 ![fourth](Docs/tb_output_tx_4.png)
 ![fifth](Docs/tb_output_tx_5.png)
 
-#### **uart_tx** Waveform
+#### ✅ **uart_tx** Waveform
 
 ![waveform](Docs/tx_waveform.png)
 
@@ -159,11 +179,11 @@ This testbech verifies the functionality of the **uart_rx** module. It tests nor
 
 For source code: [click here](TB/tb_rx.v)
 
-#### **uart_rx** Transcript Output
+#### ✅ **uart_rx** Transcript Output
 
 ![first](Docs/tb_rx_output.png)
 
-#### **uart_rx** Waveform
+#### ✅ **uart_rx** Waveform
 
 ![waveform](Docs/rx_waveform.png)
 
@@ -182,11 +202,11 @@ This testbech verifies the functionality of the **fifo_tx** & **fifo_rx** module
 
 For source code: [click here](TB/tb_fifo.v)
 
-#### **fifo** Transcript Output
+#### ✅ **fifo** Transcript Output
 
 ![first](Docs/tb_fifo_output.png)
 
-#### **fifo** Waveform
+#### ✅ **fifo** Waveform
 
 ![waveform](Docs/fifo_waveform.png)
 
@@ -198,11 +218,11 @@ This testbench verifies the functionality of **uart_baudgen** module. It verifie
 
 For source code: [click here](TB/tb_fifo.v)
 
-#### **uart_baudgen** Transcript
+#### ✅ **uart_baudgen** Transcript
 
 ![first](Docs/tb_baudgen_output.png)
 
-#### **uart_baudgen** Waveform  
+#### ✅ **uart_baudgen** Waveform  
 
 ![waveform](Docs/baudgen_wafeform.png)
 
@@ -210,7 +230,7 @@ For source code: [click here](TB/tb_fifo.v)
 
 ---         
 
-## How to Run
+## 📥 How to Run
 
 **Follow these instructions** 
 
@@ -226,7 +246,7 @@ git clone https://github.com/kareem05-ash/UART_IP.git
 
 ---         
 
-## Future Work
+## 🧠 Future Work
 
 - Implement the desing using an **FPGA Board** on **Vivado**.
 - Apply **Formal Verification** on the protocol using **SystemVerilog Assertions (SVA)** and UVM environment.
@@ -234,16 +254,16 @@ git clone https://github.com/kareem05-ash/UART_IP.git
 
 ---         
 
-## Author
+## 👨‍💻 Author
 
-- **E-Mail**: (kareem.ash05@gmail.com)      
-- **Linkedin**: [Kareem Ashraf](www.linkedin.com/in/kareem-ashraf-9aba48348)       
-- **GitHub**: (https://github.com/kareem05-ash)
-- **Phone Number**: +201002321067 / +201154398353       
+- 📧 **E-Mail**: (kareem.ash05@gmail.com)      
+- 🔗 **Linkedin**: [Kareem Ashraf](www.linkedin.com/in/kareem-ashraf-9aba48348)       
+- 🔗 **GitHub**: (https://github.com/kareem05-ash)
+- 🔗 **Phone Number**: +201002321067 / +201154398353       
 
 ---         
 
-## NOTEs
+## 📌 NOTEs
 
 I'm waiting for your feedback and contributions. Feel free to send me pull requests. This project is part of my **self-learning** journey. 
 
