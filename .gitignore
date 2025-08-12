@@ -55,6 +55,8 @@ wlf*
 *.old
 *.DS_Store
 Thumbs.do
+*.pdf
+*.docx
 
 # ========== Misc Output ==========
 *.bin
