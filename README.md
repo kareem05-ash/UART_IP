@@ -10,6 +10,7 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 
 ## 📚 Table of Contents (TOC)      
 
+- [Project Report](#project-report)
 - [Folder Structure](#-folder-structure)
 - [Block Diagram & Module Interfaces](#block-diagram--module-interfaces)
 - [Reusability & Configurable Parameters](#reusability--configurable-parameters)
@@ -24,6 +25,12 @@ The frame consists of: **start-bit**, **data-bits** LSB => MSB, **parity-bit** i
 - [Future Work](#-future-work)
 - [Author](#-author)
 - [NOTEs](#-notes)
+
+---         
+
+## Project Report
+
+This is the project report for documentation: [click here](https://drive.google.com/file/d/14ZSK5BbisTxP29EgR_qmXAFrwZaKmRUV/view?usp=drive_link)
 
 ---         
 
